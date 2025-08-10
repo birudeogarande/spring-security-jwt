@@ -22,7 +22,6 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-          MYSQL_ROOT_PASSWORD: ''
           MYSQL_DATABASE: db_jwt
           MYSQL_USER: root
           MYSQL_PASSWORD: ''

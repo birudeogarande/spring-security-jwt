@@ -14,7 +14,7 @@ public class DBConfiguration {
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/db_test"); // Replace with your database URL
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/db_jwt"); // Replace with your database URL
         config.setUsername("root"); // Replace with your database username
         config.setPassword(""); // Replace with your database password
         config.setDriverClassName("com.mysql.cj.jdbc.Driver"); // MySQL driver class

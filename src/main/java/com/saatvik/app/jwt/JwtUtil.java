@@ -45,6 +45,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .subject(userDetails.getUsername())
+                .issuer("com.saatvik.app")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key())

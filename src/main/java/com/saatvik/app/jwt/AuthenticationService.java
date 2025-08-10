@@ -2,17 +2,16 @@ package com.saatvik.app.jwt;
 
 import com.saatvik.app.dto.AuthenticationRequest;
 import com.saatvik.app.dto.AuthenticationResponse;
+import com.saatvik.app.dto.UserEntity;
+import com.saatvik.app.service.CustomerUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class AuthenticationService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private CustomerUserDetailsService userDetailsService;
 
     public AuthenticationResponse login(AuthenticationRequest request) {
 
@@ -48,16 +47,25 @@ public class AuthenticationService {
 
     public String register(AuthenticationRequest request) {
 
-         UserDetails user = User.withUsername(request.username())
-                .password(passwordEncoder.encode(request.password()))
-                .roles(request.roles().toArray(String[]::new))
-                .build();
 
-        JdbcUserDetailsManager jdbcUserDetailsManager = (JdbcUserDetailsManager) userDetailsService;
-        if (jdbcUserDetailsManager.userExists(request.username())) {
-            throw new RuntimeException("User already exists");
-        }
-        jdbcUserDetailsManager.createUser(user);
-        return "User registered successfully";
+        userDetailsService.saveUser(
+                new UserEntity(request.username(),
+                        passwordEncoder.encode(request.password()), String.join(",", request.roles())
+                        )
+        );
+    return "User registered successfully";
+
+            // Uncomment the following code if you want to use JdbcUserDetailsManager for user registration
+//         UserDetails user = User.withUsername(request.username())
+//                .password(passwordEncoder.encode(request.password()))
+//                .roles(request.roles().toArray(String[]::new))
+//                .build();
+//
+//        JdbcUserDetailsManager jdbcUserDetailsManager = (JdbcUserDetailsManager) userDetailsService;
+//        if (jdbcUserDetailsManager.userExists(request.username())) {
+//            throw new RuntimeException("User already exists");
+//        }
+//        jdbcUserDetailsManager.createUser(user);
+//        return "User registered successfully";
     }
 }

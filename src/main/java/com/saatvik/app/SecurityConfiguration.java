@@ -3,7 +3,6 @@ package com.saatvik.app;
 import com.saatvik.app.jwt.JWTAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,12 +14,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -79,39 +75,39 @@ public class SecurityConfiguration {
     }
 
 
-    @Bean
-    public CommandLineRunner initDataSource(UserDetailsService userDetailsService) {
-        return args -> {
-            // This method can be used to initialize the database with default users or roles if needed.
-            // For example, you can create default users here.
-            UserDetails user = User.withUsername("user")
-                    .password(passwordEncoder().encode("user")) // Using {noop} for plain text password; in production,
-                    .roles("USER") // This user has both USER and ADMIN roles
-                    .build();
-            UserDetails admin = User.withUsername("admin")
-                    .password(passwordEncoder().encode("admin")) // Using {noop} for plain text password; in production,
-                    .roles("ADMIN") // This user has ADMIN role
-                    .build();
-
-            JdbcUserDetailsManager jdbcUserDetailsManager =  (JdbcUserDetailsManager) userDetailsService;
-            ;
-            if (jdbcUserDetailsManager.userExists("user")) {
-                jdbcUserDetailsManager.updateUser(user);
-            } else {
-                jdbcUserDetailsManager.createUser(user);
-            }
-
-            if (jdbcUserDetailsManager.userExists("admin")) {
-                jdbcUserDetailsManager.updateUser(admin);
-            } else {
-                jdbcUserDetailsManager.createUser(admin);
-            }
-        };
-    }
-    @Bean
-    public JdbcUserDetailsManager userDetailsService() {
-        return new JdbcUserDetailsManager(dataSource);
-    }
+//    @Bean
+//    public CommandLineRunner initDataSource(UserDetailsService userDetailsService) {
+//        return args -> {
+//            // This method can be used to initialize the database with default users or roles if needed.
+//            // For example, you can create default users here.
+//            UserDetails user = User.withUsername("user")
+//                    .password(passwordEncoder().encode("user")) // Using {noop} for plain text password; in production,
+//                    .roles("USER") // This user has both USER and ADMIN roles
+//                    .build();
+//            UserDetails admin = User.withUsername("admin")
+//                    .password(passwordEncoder().encode("admin")) // Using {noop} for plain text password; in production,
+//                    .roles("ADMIN") // This user has ADMIN role
+//                    .build();
+//
+//            JdbcUserDetailsManager jdbcUserDetailsManager =  (JdbcUserDetailsManager) userDetailsService;
+//
+//            if (jdbcUserDetailsManager.userExists("user")) {
+//                jdbcUserDetailsManager.updateUser(user);
+//            } else {
+//                jdbcUserDetailsManager.createUser(user);
+//            }
+//
+//            if (jdbcUserDetailsManager.userExists("admin")) {
+//                jdbcUserDetailsManager.updateUser(admin);
+//            } else {
+//                jdbcUserDetailsManager.createUser(admin);
+//            }
+//        };
+//    }
+//    @Bean
+//    public JdbcUserDetailsManager userDetailsService() {
+//        return new JdbcUserDetailsManager(dataSource);
+//    }
 
     @Bean
     PasswordEncoder passwordEncoder(){

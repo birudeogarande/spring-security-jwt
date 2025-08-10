@@ -37,7 +37,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 // Validate the token and set the authentication in the security context
                 String username = jwtUtils.getUsernameFromToken(token);
                 if (username != null) {
+                    logger.info("Username from JWT: {}", username);
                     var userDetails = userDetailsService.loadUserByUsername(username);
+
                     if (jwtUtils.validateJwtToken(token)) {
                         var authentication = new UsernamePasswordAuthenticationToken(
                                 userDetails, null, userDetails.getAuthorities());

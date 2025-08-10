@@ -48,11 +48,15 @@ public class AuthenticationService {
     public String register(AuthenticationRequest request) {
 
 
-        userDetailsService.saveUser(
-                new UserEntity(request.username(),
-                        passwordEncoder.encode(request.password()), String.join(",", request.roles())
-                        )
-        );
+        boolean isExist = userDetailsService.userExists(request.username());
+        if (!isExist) {
+            userDetailsService.saveUser(
+                    new UserEntity(request.username(),
+                            passwordEncoder.encode(request.password()), String.join(",", request.roles())
+                    )
+            );
+        }
+
     return "User registered successfully";
 
             // Uncomment the following code if you want to use JdbcUserDetailsManager for user registration

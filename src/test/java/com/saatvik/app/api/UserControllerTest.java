@@ -42,26 +42,22 @@ class UserControllerTest {
                         }
                         """))
                 .andExpect(status().isOk());
-     }
-
-     @BeforeEach
-     public void loginTest() throws Exception {
-         mvc.perform(post("/auth/login")
-                         .contentType("application/json")
-                         .content("""
+        mvc.perform(post("/auth/login")
+                        .contentType("application/json")
+                        .content("""
                         {
                             "username": "admin",
                             "password": "admin"
                         }
                         """))
-                 .andExpect(status().isOk())
-                 .andDo(result -> {
-                     String response = result.getResponse().getContentAsString();
-                     Gson gson = new Gson();
-                     this.authenticationResponse = gson.fromJson(response, AuthenticationResponse.class);
+                .andExpect(status().isOk())
+                .andDo(result -> {
+                    String response = result.getResponse().getContentAsString();
+                    Gson gson = new Gson();
+                    this.authenticationResponse = gson.fromJson(response, AuthenticationResponse.class);
 
-                     System.out.println("Login Response: " + response);
-                 });
+                    System.out.println("Login Response: " + response);
+                });
      }
 
     @Test
